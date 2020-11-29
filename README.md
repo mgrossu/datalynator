@@ -1,2 +1,2 @@
 # IZV
-Project form IZV course at VUT FIT
+Projects form IZV course at VUT FIT
