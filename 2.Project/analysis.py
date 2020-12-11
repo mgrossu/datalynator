@@ -69,7 +69,7 @@ def plot_conseq(df: pd.DataFrame, fig_location: str = None,
     sns.barplot(x="region", y="p13a", data=all_accidents, color="red", ax=ax1, order=total_sort["region"])
     sns.barplot(x="region",y="p13b", data=all_accidents, color="orange", ax=ax2, order=total_sort["region"])
     sns.barplot(x="region",y="p13c", data=all_accidents, color="yellow", ax=ax3, order=total_sort["region"])
-    sns.barplot(x="region", y="total", data=all_accidents, color="black", ax=ax4, order=total_sort["region"])
+    sns.barplot(x="region", y="total", data=all_accidents, palette="Greys_r", ax=ax4, order=total_sort["region"])
     #graph with fatal
     ax1.title.set_text('Úmrti')
     ax1.set(xlabel="", ylabel="Počet")
@@ -117,6 +117,6 @@ if __name__ == "__main__":
     # skript nebude pri testovani pousten primo, ale budou volany konkreni ¨
     # funkce.
     df = get_dataframe("accidents.pkl.gz", verbose=True)
-    plot_conseq(df, fig_location="01_nasledky.png", show_figure=False)
+    plot_conseq(df, fig_location="02_nasledky.png", show_figure=False)
     #plot_damage(df, "02_priciny.png", True)
     #plot_surface(df, "03_stav.png", True)
