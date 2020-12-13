@@ -103,7 +103,52 @@ def plot_conseq(df: pd.DataFrame, fig_location: str = None,
 # Ukol3: příčina nehody a škoda
 def plot_damage(df: pd.DataFrame, fig_location: str = None,
                 show_figure: bool = False):
-    pass
+    #taking the values from df that I will work with
+    df = df[["region", "p12", "p53"]]
+    df = df.astype({"p53" : float})
+    df["p53"] = df["p53"].div(10) 
+    #new df with categorizing the values
+    df2 = pd.DataFrame({"region" : df.region, "p12" : pd.cut(df.p12, [0, 200, 209, 311, 414, 516, 615], 
+                          labels=["nezaviněná řidičem", "nepřiměřená rychlost jízdy", 
+                          "nesprávné předjíždění", "nedání přednosti v jízdě", 
+                          "nesprávný způsob jízdy", "technická závada vozidla"]), 
+                          "p53" : pd.cut(df.p53, [0,50, 200, 500, 1000, float("inf")], 
+                         labels=["< 50","50-200", "200-500", "500-1000", "> 1000"], include_lowest=True)})
+    print(df2)
+    #df for each the region I selected
+    df3 = df2[df2["region"].isin(["JHM", "PLK", "ZLK", "KVK"])]
+    print(df3)
+
+    #grouping
+    df4 = pd.DataFrame({"total" : df3.groupby(["region","p53", "p12"])["region"].count()})
+
+
+    #print(df4[df4.loc[0,"region"] == "JHM"])
+
+    #creating the plot 
+    sns.set_theme(style="darkgrid")
+    fig = plt.figure(constrained_layout=True, figsize=(7,7))
+    ax1, ax2, ax3, ax4 = sns.catplot(x="p53", hue="p12", col="region", col_wrap= 2 , data=df3, kind="count", legend=True)
+    #ax.set(xlabel="Škoda [tisice Kč]", ylabel="Počet")
+    #plt.title("{col_name}")
+    #g.set_xlabels("Škoda [tisice Kč]")
+    #g.set_ylabels("Počet")
+    #g.set_axis_labels("Škoda [tisice Kč]", "Počet", labelpad=0.5)
+    #g.legend.set_title("Přičina nehody")
+    #plt.legend(title="Přičina nehody", bbox_to_anchor=(1.01, 1),borderaxespad=0,fontsize=10)
+    
+    #g.set(yscale="log")
+    #g.fig.set_size_inches(10, 10)
+    #g._legend.set_title("Přičina nehody")
+    
+    #ax.set_yscale("log")
+    
+    #fig_location handling
+    if fig_location is not None:
+       fig.savefig(fig_location)
+    #show_figure handling
+    if show_figure:
+       plt.show()
 
 # Ukol 4: povrch vozovky
 def plot_surface(df: pd.DataFrame, fig_location: str = None,
@@ -117,6 +162,7 @@ if __name__ == "__main__":
     # skript nebude pri testovani pousten primo, ale budou volany konkreni ¨
     # funkce.
     df = get_dataframe("accidents.pkl.gz", verbose=True)
-    plot_conseq(df, fig_location="02_nasledky.png", show_figure=False)
+    #plot_conseq(df, fig_location="02_nasledky.png", show_figure=False)
+    plot_damage(df, show_figure=True)
     #plot_damage(df, "02_priciny.png", True)
     #plot_surface(df, "03_stav.png", True)
