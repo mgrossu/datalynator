@@ -114,38 +114,20 @@ def plot_damage(df: pd.DataFrame, fig_location: str = None,
                           "nesprávný způsob jízdy", "technická závada vozidla"]), 
                           "p53" : pd.cut(df.p53, [0,50, 200, 500, 1000, float("inf")], 
                          labels=["< 50","50-200", "200-500", "500-1000", "> 1000"], include_lowest=True)})
-    print(df2)
     #df for each the region I selected
     df3 = df2[df2["region"].isin(["JHM", "PLK", "ZLK", "KVK"])]
-    print(df3)
-
-    #grouping
-    df4 = pd.DataFrame({"total" : df3.groupby(["region","p53", "p12"])["region"].count()})
-
-
-    #print(df4[df4.loc[0,"region"] == "JHM"])
-
     #creating the plot 
     sns.set_theme(style="darkgrid")
-    fig = plt.figure(constrained_layout=True, figsize=(7,7))
-    ax1, ax2, ax3, ax4 = sns.catplot(x="p53", hue="p12", col="region", col_wrap= 2 , data=df3, kind="count", legend=True)
-    #ax.set(xlabel="Škoda [tisice Kč]", ylabel="Počet")
-    #plt.title("{col_name}")
-    #g.set_xlabels("Škoda [tisice Kč]")
-    #g.set_ylabels("Počet")
-    #g.set_axis_labels("Škoda [tisice Kč]", "Počet", labelpad=0.5)
-    #g.legend.set_title("Přičina nehody")
-    #plt.legend(title="Přičina nehody", bbox_to_anchor=(1.01, 1),borderaxespad=0,fontsize=10)
-    
-    #g.set(yscale="log")
-    #g.fig.set_size_inches(10, 10)
-    #g._legend.set_title("Přičina nehody")
-    
-    #ax.set_yscale("log")
-    
+    g = sns.catplot(x="p53", hue="p12", col="region", col_wrap= 2 , data=df3, kind="count", legend=True)
+    g.set_titles("{col_name}")
+    g.set_axis_labels("Škoda [tisic Kč]", "Počet", labelpad=0.5)
+    g.legend.set_title("Přičina nehody")
+    g.set(yscale="log")
+    g.fig.set_size_inches(12, 10)
+        
     #fig_location handling
     if fig_location is not None:
-       fig.savefig(fig_location)
+       g.fig.savefig(fig_location)
     #show_figure handling
     if show_figure:
        plt.show()
@@ -162,7 +144,6 @@ if __name__ == "__main__":
     # skript nebude pri testovani pousten primo, ale budou volany konkreni ¨
     # funkce.
     df = get_dataframe("accidents.pkl.gz", verbose=True)
-    #plot_conseq(df, fig_location="02_nasledky.png", show_figure=False)
-    plot_damage(df, show_figure=True)
-    #plot_damage(df, "02_priciny.png", True)
+    plot_conseq(df, fig_location="01_nasledky.png", show_figure=False)
+    plot_damage(df, "02_priciny.png", False)
     #plot_surface(df, "03_stav.png", True)
