@@ -4,6 +4,7 @@
 #Projekt 2 do IZV
 
 from matplotlib import pyplot as plt
+import matplotlib.dates as mdates
 import pandas as pd
 import seaborn as sns
 import numpy as np
@@ -30,7 +31,7 @@ def get_dataframe(filename: str, verbose: bool = False) -> pd.DataFrame:
     for col in list(df_new.columns):
         if col != "date"  and col != "region":
             df_new[col] = df_new[col].astype("category")
-        if col == "date" :
+        if col == "date":
             df_new[col] = pd.to_datetime(df_new[col])
  
     new_size = df_new.memory_usage(deep=True).sum()/1048576
@@ -116,7 +117,7 @@ def plot_damage(df: pd.DataFrame, fig_location: str = None,
                          labels=["< 50","50-200", "200-500", "500-1000", "> 1000"], include_lowest=True)})
     #df for each the region I selected
     df3 = df2[df2["region"].isin(["JHM", "PLK", "ZLK", "KVK"])]
-    #creating the plot 
+    #creating the plot using catplot
     sns.set_theme(style="darkgrid")
     g = sns.catplot(x="p53", hue="p12", col="region", col_wrap= 2 , data=df3, kind="count", legend=True)
     g.set_titles("{col_name}")
@@ -135,7 +136,45 @@ def plot_damage(df: pd.DataFrame, fig_location: str = None,
 # Ukol 4: povrch vozovky
 def plot_surface(df: pd.DataFrame, fig_location: str = None,
                  show_figure: bool = False):
-    pass
+    #choosing the data I need
+    df = df[["region", "date", "p16", "p1"]]
+    df = df[df["region"].isin(["JHM", "PLK", "ZLK", "KVK"])]
+    #naming the state of the road accoriding to datasheet from CR Policie
+    df["p16"] = df["p16"].replace({1 : "suchý neznečištěný",
+	                               2 : "suchý znečištěný",
+	                               3 : "povrch mokrý",	
+	                               4 : "bláto",	
+	                               5 : "náledí, ujetý sníh - posypané",
+	                               6 : "náledí, ujetý sníh - neposypané",
+	                               7 : "rozlitý olej, nafta apod", 	
+	                               8 : "souvislá sněhová vrstva",
+	                               9 : "náhlá změna stavu",
+	                               0 : "jiný stav"})
+    #grouping based on region, date and p16
+    df2 = df.groupby(["region","date", "p16"])["p1"].count()
+    df2 = df2.reset_index()
+    #undersampling the date to mounths-year
+    df2["date"] = pd.to_datetime(df2["date"]).dt.strftime("%Y-%m")
+    df3 = df2.groupby(["region", "date", "p16"])["p1"].sum()
+    df3 = df3.reset_index()
+    df3["date"] = pd.to_datetime(df3["date"]) 
+    #ploat using relplot
+    sns.set_theme(style="darkgrid")
+    g = sns.relplot(data=df3, x="date", y="p1", hue="p16", kind="line", col="region", col_wrap=2)
+    g.set_titles("{col_name}")
+    g.set_axis_labels("Datum vzniku nehody", "Počet nehod", labelpad=0.5)
+    g.legend.set_title("Stav vozovky")
+    g.fig.set_size_inches(13, 10) 
+    axes = g.axes.flatten()
+    axes[0].xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    axes[0].xaxis.set_major_locator(mdates.YearLocator())
+
+    #fig_location handling
+    if fig_location is not None:
+       g.fig.savefig(fig_location)
+    #show_figure handling
+    if show_figure:
+       plt.show()
 
 
 if __name__ == "__main__":
@@ -144,6 +183,5 @@ if __name__ == "__main__":
     # skript nebude pri testovani pousten primo, ale budou volany konkreni ¨
     # funkce.
     df = get_dataframe("accidents.pkl.gz", verbose=True)
-    plot_conseq(df, fig_location="01_nasledky.png", show_figure=False)
     plot_damage(df, "02_priciny.png", False)
-    #plot_surface(df, "03_stav.png", True)
+    plot_surface(df, "03_stav.png", True)
