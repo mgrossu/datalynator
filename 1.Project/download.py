@@ -74,8 +74,10 @@ class DataDownloader:
                 links.append(url)
             if url == 'data/datagis-rok-2019.zip':
                 links.append(url)
-            if (int(month_year[3:]) == 2020):
-                if (int(month_year[0:2]) < 12):
+            if url == 'data/datagis-rok-2020.zip':
+                links.append(url)
+            else:
+                if (int(month_year[0:2]) <= 12):
                     if url == 'data/datagis-11-2020.zip':
                         links.append(url)
 
@@ -84,14 +86,10 @@ class DataDownloader:
 
                     elif url == 'data/datagis-09-2020.zip':
                         links.append(url)
-            else:
-                if url == 'data/datagis-rok-2020.zip':
-                    links.append(url)
         for newlink in links:
             file_name = newlink[4:]
             newurl = urlunparse(parsedurl._replace(path='/'.join((pth, newlink))))
             r2 = requests.get(newurl, stream = True)
-            #print(newurl)
             path_to_file = data_dir + file_name
             with open(path_to_file, 'wb') as fd:
                 for chunk in r2.iter_content(chunk_size=128):
@@ -123,20 +121,23 @@ class DataDownloader:
         name_of_data = ["p1", "p36", "p37", "p2a", "weekday(p2a)", "p2b", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13a", "p13b", "p13c", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p27", "p28", "p34", "p35", "p39", "p44", "p45a", "p47", "p48a", "p49", "p50a", "p50b", "p51", "p52", "p53", "p55a", "p57", "p58", "a", "b", "d", "e", "f", "g", "h", "i", "j", "k", "l", "n", "o", "p", "q", "r", "s", "t", "p5a", "region"]
         data = []
         my_file = []
+  
+
 
         if not os.path.isdir(data_dir):
             self.download_data()
 
         if (int(month_year[3:]) > 2016):
             zip_file2016 = data_dir + "datagis2016.zip"
+
         if (int(month_year[3:]) > 2017):
             zip_file2017 = data_dir + "datagis-rok-2017.zip"
         if (int(month_year[3:]) > 2018):
             zip_file2018 = data_dir + "datagis-rok-2018.zip"
         if (int(month_year[3:]) > 2019):
             zip_file2019 = data_dir + "datagis-rok-2019.zip"
-        if (int(month_year[3:]) == 2020):
-            if (int(month_year[0:2]) < 12):
+        if (int(month_year[3:]) >= 2020):
+            if (int(month_year[0:2]) <= 12):
                 zip_file2020 = data_dir + "datagis-09-2020.zip" 
             else:
                 zip_file2020 = data_dir + "datagis-rok-2020.zip"
@@ -326,4 +327,4 @@ if __name__ == "__main__":
     for i in range(r[1][0].shape[0]):
        if r[1][64][i] == 'VYS':
             VYS_accidents += 1
-    print("Pocet nehod v kraji Vysocina: {}".format(VYS_accidents))
+    print("Pocet nehod v kraji Vysocina: {}".format(VYS_accidents))    
