@@ -1,2 +1,2 @@
-# IZV
-Projects for IZV course at VUT FIT
+# 3 projects for the IZV course at Faculty of Information Technology, Brno University of Technology
+
