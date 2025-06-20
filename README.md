@@ -1,6 +1,19 @@
-# Data Analysis and Visualization in Python
-### Projects for the IZV course at Faculty of Information Technology, Brno University of Technology
+# Datalynator
 
-The aim of the course is to acquaint students with the issue of data acquisition, processing and analysis in Python. Within the course, Python will be introduced as a tool for efficient data manipulation.
+Welcome to **Datalynator**, a collection of three Python projects focused on data acquisition, processing, and analysis. These projects are designed to help students and developers become proficient in handling data efficiently using Python.
 
-https://www.fit.vut.cz/study/course/IZV/.en
+---
+
+## Projects Overview
+
+### 1. Project One: [Project Name]
+*Brief description:*  
+Explain what this project does — e.g., acquiring data from sources, cleaning, or specific analysis it performs.
+
+### 2. Project Two: [Project Name]
+*Brief description:*  
+Describe the second project’s purpose and main functionality.
+
+### 3. Project Three: [Project Name]
+*Brief description:*  
+Describe the third project, highlighting its role or what makes it unique.
