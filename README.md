@@ -4,7 +4,7 @@ This repo contains a set of Python scripts designed to download, process, analyz
 
 For example, the images:
 
-- **geo1.png** — Displays accidents in the South Moravian Region broken down by **obec** (municipality) and **mimo obec** (outside municipality) areas.
+- **geo1.png** — Displays accidents in the South Moravian Region broken down by **municipality** (obec) and **outside municipality** (mimo obec) areas.
 
   ![Accidents by municipality and outside municipality (geo1)](geo1.png)
 
